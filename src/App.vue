@@ -5,16 +5,21 @@
     <br>
     <input type='text' maxlength="45" v-on:keydown.enter="addNewItem">
     <br>
-    <div class="todo">
-      <div v-for="item in data.todo" :key="item">
-        <todo :title="item" state="todo" @removeItem="removeItem" @completeItem="completeItem"></todo>
+    <div v-if="todo.length || complete.length">
+      <div class="todo">
+        <div v-for="item in todo" :key="item">
+          <todo :title="item" state="todo" @removeItem="removeItem" @completeItem="completeItem"></todo>
+        </div>
+      </div>
+      <div class="completed">
+        <div v-for="item in complete" :key="item">
+          <todo :title="item" state="complete" @removeItem="removeItem" @completeItem="completeItem"></todo>
+        </div>
       </div>
     </div>
-    <div class="completed">
-      <div v-for="item in data.complete" :key="item">
-        <todo :title="item" state="complete" @removeItem="removeItem" @completeItem="completeItem"></todo>
-      </div>
-    </div>
+    <transition name="fade" mode="out-in" v-else>
+      <span class="help" :key="updateTip" v-html="tip"></span>
+    </transition>
   </div>
 </template>
 
@@ -25,46 +30,70 @@ export default {
   name: 'App',
   data () {
     return {
-      data: {
-        todo: [],
-        complete: []
-      }
+      todo: [],
+      complete: [],
+      tip: 'Start by entering a text and pressing <span class="border">Enter</span>',
+      updateTip: false // Causes transition when updated
     }
   },
   components: {
     todo
   },
   created: function () {
+    const tips = [
+      'All the tasks are saved for future',
+      'Stay focused and work towards your goal',
+      'Remove your old tasks using the trash icon',
+      'By completing a task you are one step ahead towards your goal',
+      'Start by entering some text and pressing <span class="border">Enter</span>'
+    ]
+
+    /**
+     * Fetch saved tasks from localStorage
+     */
     if (localStorage.getItem('app.akash.focus')) {
-      this.data = JSON.parse(localStorage.getItem('app.akash.focus'))
+      const data = JSON.parse(localStorage.getItem('app.akash.focus'));
+      this.todo = data.todo;
+      this.complete = data.complete;
     }
+
+    /**
+     * Help tips shown after 7s with fade transition;
+     */
+    setInterval(() => {
+      if (this.todo.length || this.complete.length) return;
+
+      const index = tips.indexOf(this.tip);
+      this.tip = tips[index == tips.length-1 ? 0 : index+1];
+      this.updateTip = !this.updateTip;
+    }, 7000);
   },
   methods: {
     addNewItem: function (e) {
-      this.data.todo.unshift(e.target.value)
+      this.todo.unshift(e.target.value)
       e.target.value = ''
       this.updateLocalStorage()
     },
     removeItem: function (item, state) {
       if (state === 'todo') {
-        this.data.todo.splice(this.data.todo.indexOf(item), 1)
+        this.todo.splice(this.todo.indexOf(item), 1)
       } else {
-        this.data.complete.splice(this.data.complete.indexOf(item), 1)
+        this.complete.splice(this.complete.indexOf(item), 1)
       }
       this.updateLocalStorage()
     },
     completeItem: function (item, state) {
       if (state === 'todo') {
         this.removeItem(item, 'todo')
-        this.data.complete.unshift(item)
+        this.complete.unshift(item)
       } else {
         this.removeItem(item, 'complete')
-        this.data.todo.unshift(item)
+        this.todo.unshift(item)
       }
       this.updateLocalStorage()
     },
     updateLocalStorage: function () {
-      localStorage.setItem('app.akash.focus', JSON.stringify(this.data))
+      localStorage.setItem('app.akash.focus', JSON.stringify({todo: this.todo, complete: this.complete}))
     }
   }
 }
@@ -183,6 +212,33 @@ h4.subtitle {
   color: #0ACD47;
 }
 
+span.help {
+  font-size: 20px;
+  display: inline-block;
+  margin: 7vh 30px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+span.help:hover {
+  color: #fff;
+}
+span.help .border {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  padding: 2px 5px;
+  display: inline-block;
+  margin: 8px 5px;
+  font-size: 18px;
+}
+
+/* Transition Animations */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 #app {
   text-align: center;
   padding: 7vh 0;
@@ -198,8 +254,9 @@ h4.subtitle {
   right: 0;
   left: 0;
   bottom: 0;
-  background: url(https://source.unsplash.com/collection/1501932/1600x900);
+  background: url(https://source.unsplash.com/collection/1501932);
   background-size: cover;
+  background-attachment: fixed;
   background-position: center center;
   z-index: -1;
 }
@@ -211,7 +268,14 @@ h4.subtitle {
 
   #app {
     padding: 5vh 0;
-    height: 90vh;
+    min-height: 90vh;
+  }
+  
+  span.help {
+    font-size: 18px;
+  }
+  span.help .border {
+    font-size: 16px;
   }
 }
 </style>
