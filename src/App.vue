@@ -3,41 +3,40 @@
     <h1 class="title">Focus</h1>
     <h4 class="subtitle">Developed by <a href="https://github.com/blenderskool" target="_blank">Akash Hamirwasia</a></h4>
     <br>
-    <input type='text' maxlength="45" v-on:keydown.enter="addNewItem">
+    <!-- <div class="acrylic input-wrapper">
+      <input type='text' maxlength="45" v-on:keydown.enter="addNewItem">
+    </div> -->
+    <button v-if="activeCollection !== null" @click="activeCollection = null">Back</button>
     <br>
-    <div v-if="todo.length || complete.length">
-      <div class="todo">
-        <div v-for="item in todo" :key="item">
-          <todo :title="item" state="todo" @removeItem="removeItem" @completeItem="completeItem"></todo>
-        </div>
-      </div>
-      <div class="completed">
-        <div v-for="item in complete" :key="item">
-          <todo :title="item" state="complete" @removeItem="removeItem" @completeItem="completeItem"></todo>
-        </div>
-      </div>
+    <div v-if="activeCollection !== null && data.collections[activeCollection].tasks.length">
+      <tasks />
     </div>
+    <collections
+      v-else-if="activeCollection === null"
+      @openCollection="loadCollection"
+      @newCollection="createCollection"
+    />
     <transition name="fade" mode="out-in" v-else>
-      <span class="help" :key="updateTip" v-html="tip"></span>
+      <span style="display: none" class="help" :key="updateTip" v-html="tip"></span>
     </transition>
   </div>
 </template>
 
 <script>
-import todo from './components/Todo'
+import tasks from './components/TasksList'
+import collections from './components/Collections'
 
 export default {
   name: 'App',
   data () {
-    return {
-      todo: [],
-      complete: [],
+    return {        
       tip: 'Start by entering a text and pressing <span class="border">Enter</span>',
       updateTip: false // Causes transition when updated
     }
   },
   components: {
-    todo
+    tasks,
+    collections
   },
   created: function () {
     const tips = [
@@ -74,23 +73,24 @@ export default {
       e.target.value = ''
       this.updateLocalStorage()
     },
-    removeItem: function (item, state) {
-      if (state === 'todo') {
-        this.todo.splice(this.todo.indexOf(item), 1)
-      } else {
-        this.complete.splice(this.complete.indexOf(item), 1)
-      }
-      this.updateLocalStorage()
+    removeItem: function (task) {
+      const tasks = this.data.collections[this.activeCollection].tasks;
+      tasks.splice(tasks.indexOf(task), 1);
+      // this.updateLocalStorage()
     },
-    completeItem: function (item, state) {
-      if (state === 'todo') {
-        this.removeItem(item, 'todo')
-        this.complete.unshift(item)
-      } else {
-        this.removeItem(item, 'complete')
-        this.todo.unshift(item)
-      }
-      this.updateLocalStorage()
+    completeItem: function (task) {
+      task.completed = !task.completed;
+      // this.updateLocalStorage();
+    },
+    createCollection(title) {
+      this.data.collections.push({
+        title: title,
+        tasks: []
+      });
+    },
+    loadCollection(id) {
+      console.log(id);
+      this.activeCollection = id;
     },
     updateLocalStorage: function () {
       localStorage.setItem('app.akash.focus', JSON.stringify({todo: this.todo, complete: this.complete}))
@@ -119,47 +119,26 @@ a {
   font-weight: 500;
 }
 
+.input-wrapper {
+  width: 55%;
+  border-radius: 3px;
+  margin-bottom: 50px;
+  display: inline-block;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
 input {
   outline: none;
   border: none;
-  width: 55%;
+  width: 100%;
   padding: 15px 25px;
   font-size: 16px;
-  border-radius: 3px;
-  opacity: 0.8;
   transition: all 0.3s ease;
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
-  margin-bottom: 50px;
+  background-color: transparent;
+  background-color: rgba(230, 230, 230, 0.4);
 }
 input:focus {
-  opacity: 1;
-}
-
-button {
-  outline: none;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-button.primary {
-  width: 70px;
-  background-color: #E4FAEB;
-  color: #0ACD47;
-}
-button.primary:hover {
-  color: #E4FAEB;
-  background-color: #0ACD47;
-}
-button.danger {
-  background-color: #FFDFDD;
-  color: #F16A62;
-}
-button.danger:hover {
-  color: #FFDFDD;
-  background-color: #F16A62;
+  background-color: rgba(230, 230, 230, 0.65);
 }
 
 h1.title {
@@ -180,6 +159,11 @@ h4.subtitle {
   margin-bottom: 50px;
 }
 
+.todo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 .todo:empty:after {
   content: 'You have completed everything!';
 }
@@ -187,29 +171,6 @@ h4.subtitle {
 .todo:after, .completed:after {
   display: block;
   color: rgba(255, 255, 255, 0.8);
-}
-
-.completed {
-  margin-top: 30px;
-}
-.completed:before {
-  content: '';
-  width: 100px;
-  height: 1px;
-  margin-bottom: 30px;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: inline-block;
-}
-.completed:empty:after {
-  content: "You haven't completed anything";
-}
-.completed button.primary {
-  color: #E4FAEB;
-  background-color: #0ACD47;
-}
-.completed button.primary:hover {
-  background-color: #E4FAEB;
-  color: #0ACD47;
 }
 
 span.help {
@@ -231,6 +192,7 @@ span.help .border {
   font-size: 18px;
 }
 
+
 /* Transition Animations */
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -245,7 +207,7 @@ span.help .border {
   user-select: none;
   min-height: 86vh;
   position: relative;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.45);
 }
 #app::after {
   content: '';
@@ -254,11 +216,12 @@ span.help .border {
   right: 0;
   left: 0;
   bottom: 0;
-  background: url(https://source.unsplash.com/collection/1501932);
+  /* background: url(https://source.unsplash.com/collection/1501932); */
+  background: url(https://source.unsplash.com/random);
   background-size: cover;
   background-attachment: fixed;
   background-position: center center;
-  z-index: -1;
+  z-index: -2;
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
