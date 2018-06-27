@@ -1,30 +1,29 @@
 <template>
-  <span class="item" :class="{completed}">
-    <button class="primary" v-on:click="completeItem">
-      <i class="icon ion-checkmark" v-if="completed" />
+  <li class="item" :class="{completed: task.completed}">
+    <button class="primary" v-on:click="toggleTask">
+      <ion-icon name="ios-checkmark" v-if="task.completed" />
     </button>
-    <span class="name">{{title}}</span>
+    <span class="name">{{task.title}}</span>
     <div class="buttons">
-      <button class="danger" v-on:click="deleteItem(title, state)">
-        <i class="fas fa-trash-alt"></i>
+      <button class="danger" v-on:click="removeTask">
+        <ion-icon name="trash" />
       </button>
     </div>
-  </span>
+  </li>
 </template>
 
 <script>
 export default {
   name: 'Task',
   props: {
-    title: String,
-    completed: Boolean
+    task: Object
   },
   methods: {
-    deleteItem: function (item) {
-      this.$emit('removeItem', item)
+    removeTask() {
+      this.$store.commit('removeTask', this.task.id);
     },
-    completeItem() {
-      this.$emit('completeItem')
+    toggleTask() {
+      this.$store.commit('toggleTask', this.task.id);
     }
   }
 }
@@ -32,15 +31,17 @@ export default {
 
 <style scoped>
 .item {
-  padding: 8px 10px;
-  display: inline-flex;
+  padding: 12px 20px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 55%;
   border-radius: 2px;
-  margin: 7px 0;
   background-color: transparent;
   color: #ffffff;
+  transition: background-color .3s ease;
+}
+.item:hover {
+  background-color: rgba(243, 243, 243, 0.25);
 }
 .item .buttons {
   margin-left: auto;
@@ -53,57 +54,54 @@ export default {
   margin-left: 25px;
 }
 
-
 .completed .name {
   text-decoration: line-through;
 }
 .completed button.primary {
-  color: #0ACD47;
-  border: none;
+  font-size: 24px;
+  display: inline-block;
 }
-.completed .buttons button.primary:hover {
-  background-color: #E4FAEB;
-  color: #0ACD47;
+.completed button.primary ion-icon {
+  position: relative;
+  top: -4px;
+  left: -4px;
 }
 
 
 button {
   outline: none;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-button.primary {
   width: 20px;
   height: 20px;
-  border: 2px solid #0ACD47;
-  background-color: transparent;
-  color: #0ACD47;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 100%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+  background-color: transparent;
+}
+button.primary {
+  border: 2px solid #ebebeb;
+  color: #ebebeb;
 }
 button.primary .icon {
   font-size: 17px;
 }
 
 button.danger {
-  background-color: #FFDFDD;
-  color: #F16A62;
+  width: 35px;
+  height: 35px;
+  color: rgba(243, 243, 243, 0.8);
+  font-size: 20px;
 }
 button.danger:hover {
-  color: #FFDFDD;
-  background-color: #F16A62;
+  color: #fff;
+  background-color: rgba(255, 241, 241, 0.3);
 }
 
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-  .item {
-    width: 70%;
-  }
-
+@media only screen and (max-width : 600px) {
   .name {
     max-width: 60%;
   }

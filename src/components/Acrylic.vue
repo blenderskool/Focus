@@ -17,39 +17,6 @@ export default {
 </script>
 
 <style>
-  .acrylic {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(46, 46, 46, 0.4);
-  }
-  .acrylic::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    /* background: url(https://source.unsplash.com/collection/1501932); */
-    background: url(https://source.unsplash.com/random);
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center center;
-    z-index: -1;
-    pointer-events: none;
-    filter: blur(10px) saturate(1.5);
-  }
-  .acrylic::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    background-color: rgba(243, 243, 243, 0.28);
-    transition: background-color 0.3s ease;
-  }
-
   .card {
     width: 100px;
     height: 100px;

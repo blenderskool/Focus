@@ -16,13 +16,18 @@ import acrylic from './Acrylic';
 
 export default {
   name: 'Collections',
-  props: ['collections'],
   components: {
     acrylic
   },
+  computed: {
+    collections() {
+      return this.$store.state.collections;
+    }
+  },
   methods: {
     openCollection(id) {
-      this.$emit('openCollection', id);
+      window.history.pushState({id}, null, `./collection=${id}`);
+      this.$store.commit('loadCollection', id);
     },
     getMeter(tasks) {
       const completed = tasks.filter(task => task.completed).length;
