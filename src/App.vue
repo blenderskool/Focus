@@ -174,14 +174,13 @@ export default {
   }
   #app::after {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
     background: url(https://source.unsplash.com/collection/1501932);
     background-size: cover;
-    background-attachment: fixed;
     background-position: center center;
     z-index: -5;
   }
