@@ -1,6 +1,6 @@
 <template>
   <div class="collections">
-    <acrylic
+    <card
       v-for="(collection, i) in collections"
       :key="i"
       :title="collection.title"
@@ -12,12 +12,12 @@
 </template>
 
 <script>
-import acrylic from './Acrylic';
+import card from './Card';
 
 export default {
   name: 'Collections',
   components: {
-    acrylic
+    card
   },
   computed: {
     collections() {

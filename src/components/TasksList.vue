@@ -1,43 +1,52 @@
 <template>
   <div class="tasks">
     <div class="wrapper">
-      <ul class="acrylic" v-if="todo.length">
+      <acrylic class="list" v-if="todo.length">
+        <ul>
+          <task
+            v-for="task in todo"
+            :task="task"
+            :key="task.id"
+          />
+        </ul>
+      </acrylic>
+      <span v-else-if="!todo.length && completed.length">
+        Nothing left todo!
+      </span>
+    </div>
+    <acrylic class="list" v-if="completed.length">
+      <ul>
         <task
-          v-for="task in todo"
+          v-for="task in completed"
           :task="task"
           :key="task.id"
         />
       </ul>
-      <span v-else>
-        Nothing left todo!
-      </span>
-    </div>
-    <ul class="acrylic" v-if="completed.length">
-      <task
-        v-for="task in completed"
-        :task="task"
-        :key="task.id"
-      />
-    </ul>
-    <span v-else>
+    </acrylic>
+    <span v-else-if="!completed.length && todo.length">
       You haven't completed anything!
     </span>
+    <tips v-if="!todo.length && !completed.length" />
   </div>
 </template>
 
 <script>
-import task from './Task';
+import acrylic from './Acrylic'
+import tips from './Tips'
+import task from './Task'
 
 export default {
   name: 'TasksList',
   components: {
-    task
+    task,
+    tips,
+    acrylic
   },
   computed: {
-    todo: function() {
+    todo() {
       return this.$store.getters.tasks();
     },
-    completed: function() {
+    completed() {
       return this.$store.getters.tasks(true);
     }
   }
@@ -53,7 +62,7 @@ export default {
   .wrapper {
     position: relative;
   }
-  .wrapper::after {
+  .wrapper:not(:empty):after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -63,13 +72,17 @@ export default {
     background-color: rgba(255, 255, 255, 0.5);
   }
 
+  .list {
+    display: inline-block;
+    width: 55%;
+    margin: 15px 0;
+    border-radius: 3px;
+  }
+
   ul {
     list-style: none;
     padding: 0;
-    width: 55%;
-    display: inline-block;
-    border-radius: 3px;
-    position: relative;
+    margin: 0;
   }
 
   ul >>> li:not(:last-child) {

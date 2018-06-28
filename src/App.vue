@@ -3,7 +3,7 @@
     <h1 class="title">Focus</h1>
     <h4 class="subtitle">Developed by <a href="https://github.com/blenderskool" target="_blank">Akash Hamirwasia</a></h4>
     <br>
-    <div class="acrylic input-wrapper">
+    <acrylic class="input-wrapper">
       <input
         type="text"
         maxlength="45"
@@ -20,19 +20,19 @@
         v-on:keydown.enter="createCollection"
         v-else
       >
-    </div>
+    </acrylic>
     <br>
     <div v-if="activeCollection !== null">
       <tasks />
     </div>
     <collections v-else-if="activeCollection === null" />
-    <transition name="fade" mode="out-in" v-if="!collections.length">
-      <span class="help" :key="updateTip" v-html="tip"></span>
-    </transition>
+    <tips v-if="!collections.length" />
   </div>
 </template>
 
 <script>
+import acrylic from './components/Acrylic'
+import tips from './components/Tips'
 import tasks from './components/TasksList'
 import collections from './components/Collections'
 
@@ -42,13 +42,13 @@ export default {
     return {
       collName: '',
       taskName: '',
-      tip: 'Start by entering some text and pressing <span class="border">Enter</span>',
-      updateTip: false // Causes transition when updated,
     }
   },
   components: {
     tasks,
-    collections
+    collections,
+    acrylic,
+    tips
   },
   computed: {
     collections() {
@@ -61,16 +61,7 @@ export default {
       return this.$store.getters.activeCollection;
     }
   },
-  created: function () {
-    const tips = [
-      'Create collections to organize your tasks',
-      'All the tasks are saved for future',
-      'Stay focused and work towards your goal',
-      'Remove your old tasks using the trash icon',
-      'By completing a task you are one step ahead towards your goal',
-      'Start by entering some text and pressing <span class="border">Enter</span>'
-    ]
-
+  created() {
     /**
      * Fetch saved tasks from localStorage
      */
@@ -91,16 +82,6 @@ export default {
       this.$store.commit('loadCollection', e.state ? e.state.id : e.state);
     });
 
-    /**
-     * Help tips shown after 7s with fade transition
-     */
-    setInterval(() => {
-      if (this.collections.length) return;
-
-      const index = tips.indexOf(this.tip);
-      this.tip = tips[index == tips.length-1 ? 0 : index+1];
-      this.updateTip = !this.updateTip;
-    }, 7000);
   },
   methods: {
     createTask() {
@@ -183,34 +164,6 @@ export default {
     margin-bottom: 25px;
   }
 
-  span.help {
-    font-size: 20px;
-    display: inline-block;
-    margin: 7vh 30px;
-    color: rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-  }
-  span.help:hover {
-    color: #fff;
-  }
-  span.help .border {
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    border-radius: 3px;
-    padding: 2px 5px;
-    display: inline-block;
-    margin: 8px 5px;
-    font-size: 18px;
-  }
-
-
-  /* Transition Animations */
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
-
   #app {
     text-align: center;
     padding: 3.5vh 0;
@@ -230,40 +183,9 @@ export default {
     background-size: cover;
     background-attachment: fixed;
     background-position: center center;
-    z-index: -2;
+    z-index: -5;
   }
 
-  .acrylic {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(46, 46, 46, 0.4);
-  }
-  .acrylic::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    background: url(https://source.unsplash.com/collection/1501932);
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center center;
-    z-index: -1;
-    pointer-events: none;
-    filter: blur(10px) saturate(1.5);
-  }
-  .acrylic::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    background-color: rgba(243, 243, 243, 0.28);
-    transition: background-color 0.3s ease;
-  }
 
 @media only screen and (max-width : 600px) {
   .input-wrapper {
