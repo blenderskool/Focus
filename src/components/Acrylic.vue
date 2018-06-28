@@ -59,6 +59,7 @@ export default {
     bottom: 0;
     z-index: -2;
     pointer-events: none;
+    background: url(http://api.thumbr.it/whitenoise-361x370.png?background=ffffff00&noise=626262&density=83&opacity=18);
     background-color: rgba(200, 200, 200, 0.28);
     transition: background-color 0.3s ease;
   }

@@ -82,6 +82,10 @@ export default {
       this.$store.commit('loadCollection', e.state ? e.state.id : e.state);
     });
 
+    /**
+     * Change the Beacon call message as it is too big for mobile
+     */
+    document.getElementsByTagName('beacon-app')[0].callMessage = 'Other work';
   },
   methods: {
     createTask() {
