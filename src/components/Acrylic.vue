@@ -20,19 +20,14 @@ export default {
     z-index: 0;
   }
 
-  .acrylic-container .acrylic {
+  .acrylic {
     position: absolute !important;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-  }
-
-  .acrylic {
-    position: absolute;
     clip: rect(auto, auto, auto, auto);
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(46, 46, 46, 0.4);
+    /* overflow: hidden; */
     z-index: -1;
   }
   .acrylic::before {
