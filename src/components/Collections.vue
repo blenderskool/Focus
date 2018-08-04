@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     openCollection(id) {
-      window.history.pushState({id}, null, `./collection=${id}`);
+      window.history.pushState({id}, null, `./?collection=${id}`);
       this.$store.commit('loadCollection', id);
     },
     getMeter(tasks) {
