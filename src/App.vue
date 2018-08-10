@@ -27,6 +27,14 @@
     </div>
     <collections v-else-if="activeCollection === null" />
     <tips v-if="!collections.length" />
+
+    <div class="repo">
+      <acrylic>
+        <a href="https://github.com/blenderskool/focus" target="_blank">
+          <ion-icon name="logo-github" />
+        </a>
+      </acrylic>
+    </div>
   </div>
 </template>
 
@@ -187,6 +195,25 @@ export default {
     background-size: cover;
     background-position: center center;
     z-index: -5;
+  }
+
+  .repo {
+    position: fixed;
+    top: 8px;
+    right: 8px;
+    color: #ffffff;
+  }
+  .repo .acrylic-container {
+    border-radius: 100vh;
+  }
+  .repo a {
+    padding: 8px 25px;
+    display: inline-block;
+    font-size: 18px;
+    transition: all 0.3s ease;
+  }
+  .repo a:hover {
+    background-color: rgba(230, 230, 230, 0.3);
   }
 
 

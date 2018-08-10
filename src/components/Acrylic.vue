@@ -27,9 +27,11 @@ export default {
     bottom: 0;
     right: 0;
     clip: rect(auto, auto, auto, auto);
+    backface-visibility: hidden;
     /* overflow: hidden; */
     z-index: -1;
   }
+
   .acrylic::before {
     content: '';
     position: fixed;
