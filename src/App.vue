@@ -104,7 +104,9 @@ export default {
     },
     createCollection() {
       if (this.collName) {
-        this.$store.commit('addCollection', this.collName);
+        this.$store.commit('addCollection', {
+          title: this.collName
+        });
         this.collName = '';
       }
     }
@@ -208,7 +210,9 @@ export default {
   }
   .repo a {
     padding: 8px 25px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
     transition: all 0.3s ease;
   }

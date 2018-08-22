@@ -55,14 +55,22 @@ export default new Vuex.Store({
     loadCollection: (state, id) => {
       state.activeCollection = id;
     },
-    addCollection: (state, title) => {
+    addCollection: (state, { title = '', tasks = [] }) => {
       /**
        * Creates a new collection
        */
       state.collections.push({
         title,
-        tasks: []
+        tasks
       });
+
+      updateStorage(state.collections);
+    },
+    removeCollection: (state, id) => {
+      /**
+       * Removes a collection and all its tasks
+       */
+      state.collections.splice(id, 1);
 
       updateStorage(state.collections);
     },
