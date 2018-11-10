@@ -45,7 +45,7 @@ export default {
     background-position: center center;
     z-index: -3;
     pointer-events: none;
-    filter: blur(10px) saturate(1.2) brightness(0.7);
+    filter: blur(15px) saturate(1.3) brightness(0.7);
   }
   .acrylic::after {
     content: '';
@@ -56,8 +56,9 @@ export default {
     bottom: 0;
     z-index: -2;
     pointer-events: none;
-    background: url(http://api.thumbr.it/whitenoise-361x370.png?background=ffffff00&noise=626262&density=83&opacity=18);
-    background-color: rgba(200, 200, 200, 0.28);
+    background: url(http://api.thumbr.it/whitenoise-256x256.png?background=ffffff00&noise=626262&density=83&opacity=40);
+    background-size: 25%;
+    background-color: rgba(200, 200, 200, 0.18);
     transition: background-color 0.3s ease;
   }
 
