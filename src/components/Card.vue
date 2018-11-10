@@ -23,11 +23,11 @@ export default {
 
 <style>
   .card {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
     color: #ffffff;
     font-weight: 600;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 20px;

@@ -115,6 +115,11 @@ export default {
 </script>
 
 <style>
+
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -136,22 +141,29 @@ export default {
 
   .input-wrapper {
     width: 55%;
-    border-radius: 3px;
+    border-radius: 8px;
     margin-bottom: 50px;
     display: inline-block;
     box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.1s ease;
+  }
+  .input-wrapper:focus-within {
+    box-shadow: none;
+  }
+  .input-wrapper .acrylic::after {
+    background-color: rgba(200, 200, 200, 0.1) !important;
   }
 
   input {
     outline: none;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.35);
     width: 100%;
     color: #fff;
-    padding: 15px 25px;
+    padding: 13px 25px;
     font-size: 16px;
+    border-radius: 8px;
+    background-color: rgba(230, 230, 230, 0);
     transition: all 0.3s ease;
-    background-color: transparent;
-    background-color: rgba(230, 230, 230, 0.15);
   }
   input::-webkit-input-placeholder {
     color: #efefef;
@@ -182,7 +194,7 @@ export default {
     text-align: center;
     padding: 3.5vh 0;
     user-select: none;
-    min-height: 93vh;
+    min-height: 100vh;
     position: relative;
     background-color: rgba(0, 0, 0, 0.45);
   }
