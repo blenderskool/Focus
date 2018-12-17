@@ -9,3 +9,18 @@ Due to performance constraints, this is not natively supported very well in all 
 I have made use of some hacks, that allow you to experience this UI design with today's web technologies. Some issues are:
 - Blur does not work on IE 11 :no_mouth:.
 - Minor rendering issues on mobile browsers.
+
+
+## Development
+### To run the development version of the app
+```
+  git clone https://github.com/blenderskool/focus
+  cd focus
+  npm install
+  npm run dev
+```
+
+### To build the code for production
+```
+  npm run build
+```
