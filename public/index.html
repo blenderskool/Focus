@@ -31,6 +31,8 @@
         for (var file of chunk.files) {
           if (file.match(/\.(js|css)$/)) { %>
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
+
+    <link href="https://unpkg.com/ionicons@4.4.4/dist/css/ionicons.min.css" rel="stylesheet">
   </head>
   <body>
     <noscript>
@@ -42,6 +44,5 @@
     <!-- built files will be auto injected -->
     <beacon-app key="6nQ9VvEYFRDGpOdJ2RAj"></beacon-app>
     <script src="https://beaconapp.in/b.js"></script>
-    <script src="https://unpkg.com/ionicons@4.2.1/dist/ionicons.js"></script>
   </body>
 </html>

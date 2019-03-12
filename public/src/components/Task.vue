@@ -1,12 +1,12 @@
 <template>
-  <li class="item" :class="{completed: task.completed}">
+  <li class="item" :class="{completed: task.is_complete}">
     <button class="primary" v-on:click="toggleTask">
-      <ion-icon name="ios-checkmark" v-if="task.completed" />
+      <i class="icon ion-ios-checkmark" v-if="task.is_complete" />
     </button>
-    <span class="name">{{task.title}}</span>
+    <span class="name">{{ task.task }}</span>
     <div class="buttons">
       <button class="danger" v-on:click="removeTask">
-        <ion-icon name="trash" />
+      <i class="icon ion-md-trash" />
       </button>
     </div>
   </li>
@@ -20,10 +20,22 @@ export default {
   },
   methods: {
     removeTask() {
-      this.$store.commit('removeTask', this.task.id);
+     
+      this.$emit('remove', this.task.id);
+      fetch(`http://localhost:3000/tasks/${this.task.id}`, {
+        method: 'DELETE'
+      })
+      .catch(err => console.log(err));
+
     },
     toggleTask() {
-      this.$store.commit('toggleTask', this.task.id);
+      
+      this.$emit('toggle', this.task.id);
+      fetch(`http://localhost:3000/tasks/${this.task.id}/update`, {
+        method: 'POST'
+      })
+      .catch(err => console.log(err));
+
     }
   }
 }
@@ -87,7 +99,9 @@ button.primary {
   color: #ebebeb;
 }
 button.primary .icon {
-  font-size: 17px;
+  font-size: 26px;
+  position: relative;
+  top: -7px;
 }
 
 button.danger {
